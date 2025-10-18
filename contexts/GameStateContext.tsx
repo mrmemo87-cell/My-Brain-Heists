@@ -57,26 +57,26 @@ export const GameStateProvider: React.FC<GameStateProviderProps> = ({ children }
 
     // Stamina Regeneration Timer
     useEffect(() => {
-        if (!gameState || !gameState.user) return;
+        if (!authUser) return;
 
         const intervalId = setInterval(() => {
             setGameState(prevState => {
-                if (!prevState || prevState.user.stamina >= prevState.user.maxStamina) {
+                if (!prevState || !prevState.user || prevState.user.stamina >= prevState.user.maxStamina) {
                     return prevState;
                 }
                 const newStamina = Math.min(prevState.user.stamina + STAMINA_REGEN_RATE, prevState.user.maxStamina);
                 const updatedUser = { ...prevState.user, stamina: newStamina };
                 const newState = { ...prevState, user: updatedUser };
-                if (authUser) saveGameState(authUser.uid, newState); // Save on update
+                saveGameState(authUser.uid, newState); // Save on update
                 return newState;
             });
         }, STAMINA_REGEN_INTERVAL);
 
         return () => clearInterval(intervalId);
-    }, [gameState, authUser]);
+    }, [authUser]);
     
-     // Level Up Logic
-    const checkForLevelUp = useCallback((currentUser: User): User => {
+     // Level Up Logic - This is a helper function, no need for useCallback here.
+    const checkForLevelUp = (currentUser: User): User => {
         let user = { ...currentUser };
         while (user.xp >= user.xpToNextLevel) {
             user.level += 1;
@@ -93,7 +93,7 @@ export const GameStateProvider: React.FC<GameStateProviderProps> = ({ children }
             playSound('success');
         }
         return user;
-    }, []);
+    };
 
     const completeTask = (task: Task) => {
         if (!gameState) return;
