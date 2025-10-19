@@ -44,7 +44,7 @@ const AuthenticatedApp: React.FC = () => {
          <div className="bg-gray-900 min-h-screen text-white font-sans selection:bg-cyan-500/30">
              <div className="fixed top-0 left-0 w-full h-full bg-grid-pattern opacity-10 z-0"></div>
              <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-t from-gray-900 via-transparent to-gray-900 z-0"></div>
-            <Header setActivePage={setActivePage} />
+            <Header activePage={activePage} setActivePage={setActivePage} />
              <main className="container mx-auto px-4 py-8 relative z-10">
                 {renderPage()}
             </main>
